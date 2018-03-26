@@ -10,3 +10,4 @@ venv1*
 *.pyc
 *.xlsx
 *.log*
+app.db
