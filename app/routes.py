@@ -9,6 +9,10 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required # users must be logged in to view this page
 def index():
+    '''
+    Renders index template. Final product will display most recent posts.
+    Currently displays hard-coded posts below.
+    '''
     posts = [
         {
             'author': {'username': 'John'},
@@ -17,12 +21,23 @@ def index():
         {
             'author': {'username': 'Emily'},
             'body': 'I got my boyfriend into Grey\'s Anatomy. I feel accomplished!'
+        },
+        {
+            'author': {'username': 'Ben'},
+            'body': 'Seriously, how did I get into Grey\'s so quickly?'
         }
     ]
     return render_template('index.html', title='Home', posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''
+    Renders the login template. First checks if users are already logged into app 
+    and redirects to index if True. Upon submission, queries database for user. 
+    If password or username mismatch, reloads the login page and displays error
+    message. If credentials are correct, login_usser() function is called and 
+    newly logged in user is redirected to the index page. 
+    '''
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -40,12 +55,20 @@ def login():
 
 @app.route('/logout')
 def logout():
+    '''
+    Logs the user out and redirects to index page
+    '''
     logout_user()
     return redirect(url_for('index'))
 
 # pylint: disable=no-member
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    '''
+    Renders the registration form template. Once submission is validated,
+    creates a new user and commits the addition to the users db model.
+    Redirects to login page when completed.
+    '''
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
