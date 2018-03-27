@@ -109,7 +109,7 @@ def user(username):
 def edit_profile():
     '''
     Renders the edit_profile template. If validate_on_submit() returns True,
-    database is updated with data from the form. 
+    database is updated with data from the form and a message is displayed. 
     If validate_on_submit() returns False, checks if it was a GET request in which 
     case the initial version of the form template is provided. 
     '''
