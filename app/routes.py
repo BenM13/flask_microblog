@@ -113,7 +113,7 @@ def edit_profile():
     If validate_on_submit() returns False, checks if it was a GET request in which 
     case the initial version of the form template is provided. 
     '''
-    form = EditProfileForm()
+    form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
