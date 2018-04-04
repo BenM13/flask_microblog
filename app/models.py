@@ -10,7 +10,7 @@ from hashlib import md5
 followers = db.Table('followers',
         db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
         db.Column('followed_id', db.Integer, db.ForeignKey('user.id')))
-        
+
 class User(UserMixin, db.Model):
     '''
     Creates a user database model.
@@ -66,14 +66,15 @@ class User(UserMixin, db.Model):
             self.followed.remove(user)
 
     def is_following(self, user):
-        return self.follow.filter(
+        return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
     def followed_posts(self):
-        return Post.query.join(
-            followers, (followers.c.followed_id == Post.user_id)).filter(
-                followers.c.follower_id == self.id).order_by(
-                    Post.timestamp.desc())
+        followed = Post.query.join(
+           followers, (followers.c.followed_id == Post.user_id)).filter(
+               followers.c.follower_id == self.id)
+        own = Post.query.filter_by(user_id=self.id)
+        return followed.union(own).order_by(Post.timestamp.desc())
 
 class Post(db.Model):
     '''
