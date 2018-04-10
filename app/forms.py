@@ -12,6 +12,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
+    '''
+    New user registration form. Prompts new user for username, email, password,
+    and confirmation of password. 
+    '''
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -20,11 +24,19 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
+        '''
+        Username must be unique. Checks if username already exists in database
+        and raises a validation error if it does. 
+        '''
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Username already exists; please use another')
         
     def validate_email(self, email):
+        '''
+        Email must be unique. Checks if email already exists in database and 
+        raises a validation error if it does. 
+        '''
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Emaiil already exists: please use another.')
@@ -43,3 +55,8 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
                 raise ValidationError('Username already exists; please use another')
+
+class PostForm(FlaskForm):
+    post = TextAreaField('Say something', validators=[
+        DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
