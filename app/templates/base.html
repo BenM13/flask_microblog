@@ -48,3 +48,9 @@
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
+
+<!-- integrates moment.js library into all other templates -->
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
